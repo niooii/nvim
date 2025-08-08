@@ -16,7 +16,7 @@ Cool IDE setup, run nvim in project root.
 
 ### Window Resizing
 - `Alt+←/→/↑/↓` - Resize current window
-- `Ctrl+h/j/k/l` - Navigate between windows
+- `Alt+h/j/k/l` - Navigate between windows
 
 ### Window Operations
 - `<leader>wc` - Close current window
@@ -59,6 +59,17 @@ Cool IDE setup, run nvim in project root.
 - **LSP**: clangd for completion, diagnostics, navigation
 - **Debugging**: `<leader>db` (breakpoint), `<leader>dc` (continue), `<leader>dt` (toggle UI)
 - **Code Outline**: `<leader>a` - Toggle aerial (symbol tree)
+
+## Terminal
+
+- `:term` - Open terminal in current window
+- `:split | term` - Terminal in horizontal split  
+- `:vsplit | term` - Terminal in vertical split
+- **Exit terminal**: `Alt+Q`
+
+## Editor
+
+- **Tab**: Inserts 4 spaces 
 
 ## BTW
 
