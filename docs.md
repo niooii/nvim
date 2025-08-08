@@ -69,7 +69,7 @@ Cool IDE setup, run nvim in project root.
 
 ## Editor
 
-- **Tab**: Inserts 4 spaces 
+- **Tab**: Inserts 4 spaces (or accepts autocompletion)
 
 ## BTW
 
