@@ -54,11 +54,31 @@ Cool IDE setup, run nvim in project root.
 - `gra` - Code actions
 - `<leader>f` - Format buffer
 
-## C++ Stuff
+# Lang/env/proj Support
 
-- **LSP**: clangd for completion, diagnostics, navigation
+## C++ Development
+
+- **LSP**: clangd
 - **Debugging**: `<leader>db` (breakpoint), `<leader>dc` (continue), `<leader>dt` (toggle UI)
 - **Code Outline**: `<leader>a` - Toggle aerial (symbol tree)
+
+## Haskell Development
+
+- **LSP**: haskell-language-server
+- **Build System**: Auto-detects Cabal/Stack projects
+- **REPL**: `<leader>hb` - Toggle Haskell REPL
+- **Build**: `<leader>hc` - Compile, `<leader>hr` - Run, `<leader>ht` - Test
+- **Tools**: `<leader>hh` - Hoogle search, `<leader>he` - Evaluate all
+- **Formatting**: Ormolu formatter integrated with `<leader>f`
+- **Commands**: `:CabalBuild`, `:CabalRun`, `:CabalTest`, `:CabalRepl` (or Stack equivalents)
+
+## Workspace Auto-saved Sessions
+
+- **Auto-save/restore**: Complete workspace state (tabs, splits, terminals) saved per directory
+- `<leader>ws` - Save current workspace manually
+- `<leader>wr` - Restore workspace manually  
+- `<leader>wd` - Delete saved workspace
+- `<leader>wl` - List/search saved workspaces
 
 ## Terminal
 
