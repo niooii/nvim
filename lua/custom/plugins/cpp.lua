@@ -1,5 +1,21 @@
 -- A collection of plugins to create a CLion-like C++ development environment
 return {
+  -- Standard C++ indentation
+  {
+    'nvim-treesitter/nvim-treesitter',
+    config = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'c', 'cpp' },
+        callback = function()
+          -- Use cindent (standard for C-style languages)
+          vim.opt_local.cindent = true
+          vim.opt_local.autoindent = true
+          -- Standard C++ cinoptions
+          vim.opt_local.cinoptions = ':0,l1,t0,g0,(0'
+        end,
+      })
+    end,
+  },
   -- LSP-based syntax highlighting (not treesitter its bugged???)
   {
     'jackguo380/vim-lsp-cxx-highlight',

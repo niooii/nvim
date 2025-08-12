@@ -679,7 +679,28 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = "workspace",
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = "basic",
+                autoImportCompletions = true,
+                completeFunctionParens = true,
+                indexing = true,
+              },
+            },
+          },
+          before_init = function(_, config)
+            local cwd = vim.fn.getcwd()
+            local uv_venv = cwd .. '/.venv/bin/python'
+            if vim.fn.executable(uv_venv) == 1 then
+              config.settings.python.pythonPath = uv_venv
+            end
+          end,
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -723,6 +744,11 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'clangd', -- C/C++ language server
+        'pyright', -- Python language server
+        'black', -- Python formatter
+        'isort', -- Python import organizer
+        'ruff', -- Python linter and formatter
+        'debugpy', -- Python debugger
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -776,8 +802,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         haskell = { 'ormolu' }, -- Haskell formatter
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' }, -- Python import sorting and formatting
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -952,13 +977,13 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'haskell', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'cpp', 'haskell', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'python', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
         enable = true,
         -- Disable problematic languages
-        disable = { 'c', 'cpp', 'html', 'diff' },
+        disable = { 'html', 'diff' },
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
