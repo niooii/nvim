@@ -167,10 +167,10 @@ vim.o.scrolloff = 10
 vim.o.confirm = true
 
 -- Tab settings: use 4 spaces instead of tabs
-vim.o.expandtab = true    -- Convert tabs to spaces
-vim.o.tabstop = 4         -- Number of spaces that a tab counts for
-vim.o.shiftwidth = 4      -- Number of spaces to use for each step of (auto)indent
-vim.o.softtabstop = 4     -- Number of spaces that a tab counts for while editing
+vim.o.expandtab = true -- Convert tabs to spaces
+vim.o.tabstop = 4 -- Number of spaces that a tab counts for
+vim.o.shiftwidth = 4 -- Number of spaces to use for each step of (auto)indent
+vim.o.softtabstop = 4 -- Number of spaces that a tab counts for while editing
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -181,12 +181,13 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show line [D]iagnostics' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
 --
--- NOTE: Using Alt+Q instead of Esc to avoid conflicts with CLI tools like Claude Code
+-- NOTE: Using Alt+Q instead of Esc to avoid conflicts with CLI tools
 -- This overrides the default macro recording on Alt+Q
 vim.keymap.set('t', '<A-q>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
@@ -441,7 +442,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>sb', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -649,6 +650,7 @@ require('lazy').setup({
         virtual_text = {
           source = 'always',
           spacing = 2,
+          wrap = true,
           format = function(diagnostic)
             local diagnostic_message = {
               [vim.diagnostic.severity.ERROR] = diagnostic.message,
@@ -684,9 +686,9 @@ require('lazy').setup({
             python = {
               analysis = {
                 autoSearchPaths = true,
-                diagnosticMode = "workspace",
+                diagnosticMode = 'workspace',
                 useLibraryCodeForTypes = true,
-                typeCheckingMode = "basic",
+                typeCheckingMode = 'basic',
                 autoImportCompletions = true,
                 completeFunctionParens = true,
                 indexing = true,
@@ -1052,11 +1054,12 @@ require('lazy').setup({
 
 -- force enable virtual lines something is disabling it
 vim.defer_fn(function()
-  vim.diagnostic.config({
+  vim.diagnostic.config {
     virtual_text = {
       source = 'always',
       spacing = 2,
       prefix = '●',
-    }
-  })
+      wrap = true,
+    },
+  }
 end, 100)

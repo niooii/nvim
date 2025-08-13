@@ -54,6 +54,11 @@ Cool IDE setup, run nvim in project root.
 - `gra` - Code actions
 - `<leader>f` - Format buffer
 
+### Diagnostics
+- `<leader>d` - Show line diagnostics
+- `<leader>q` - Open diagnostic quickfix list
+- `<leader>sd` - Search diagnostics (Telescope)
+
 # Lang/env/proj Support
 
 ## C++ Development

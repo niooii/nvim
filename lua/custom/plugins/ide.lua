@@ -13,11 +13,11 @@ return {
         always_show_bufferline = true,
         offsets = {
           {
-            filetype = "neo-tree",
-            text = "File Explorer",
-            text_align = "center",
+            filetype = 'neo-tree',
+            text = 'File Explorer',
+            text_align = 'center',
             separator = true,
-          }
+          },
         },
       },
     },
@@ -28,13 +28,13 @@ return {
     'mrjones2014/smart-splits.nvim',
     opts = {},
     config = function()
-      local smart_splits = require('smart-splits')
+      local smart_splits = require 'smart-splits'
       smart_splits.setup()
 
       -- Enhanced split creation (tmux-like)
       vim.keymap.set('n', '<leader>%', '<cmd>vsplit<CR>', { desc = 'Split window vertically' })
       vim.keymap.set('n', '<leader>"', '<cmd>split<CR>', { desc = 'Split window horizontally' })
-      
+
       -- Window resizing with Alt+Arrow keys
       vim.keymap.set('n', '<A-Left>', smart_splits.resize_left, { desc = 'Resize window left' })
       vim.keymap.set('n', '<A-Right>', smart_splits.resize_right, { desc = 'Resize window right' })
@@ -47,17 +47,15 @@ return {
       vim.keymap.set('n', '<leader>bn', '<cmd>bnext<CR>', { desc = '[B]uffer [N]ext' })
       vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<CR>', { desc = '[B]uffer [P]revious' })
       vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<CR>', { desc = '[B]uffer [D]elete' })
-      
+
       -- Jump to specific buffer by number (Alt+1, Alt+2, etc.)
       for i = 1, 9 do
-        vim.keymap.set('n', '<A-' .. i .. '>', '<cmd>BufferLineGoToBuffer ' .. i .. '<CR>', 
-          { desc = 'Go to buffer ' .. i })
+        vim.keymap.set('n', '<A-' .. i .. '>', '<cmd>BufferLineGoToBuffer ' .. i .. '<CR>', { desc = 'Go to buffer ' .. i })
       end
-      
+
       -- Quick close window
       vim.keymap.set('n', '<leader>wc', '<cmd>close<CR>', { desc = '[W]indow [C]lose' })
       vim.keymap.set('n', '<leader>wo', '<cmd>only<CR>', { desc = '[W]indow [O]nly' })
-      
     end,
   },
 
@@ -72,7 +70,7 @@ return {
         },
         use_libuv_file_watcher = true,
         window = {
-          position = "left",
+          position = 'left',
           width = 35,
           mappings = {
             ['\\'] = 'close_window',
@@ -87,21 +85,21 @@ return {
       default_component_configs = {
         indent = {
           with_expanders = true,
-          expander_collapsed = "",
-          expander_expanded = "",
+          expander_collapsed = '',
+          expander_expanded = '',
         },
         git_status = {
           symbols = {
-            added     = "+",
-            modified  = "~",
-            deleted   = "✖",
-            renamed   = "",
-            untracked = "?",
-            ignored   = "",
-            unstaged  = "U",
-            staged    = "S",
-            conflict  = "",
-          }
+            added = '+',
+            modified = '~',
+            deleted = '✖',
+            renamed = '',
+            untracked = '?',
+            ignored = '',
+            unstaged = 'U',
+            staged = 'S',
+            conflict = '',
+          },
         },
       },
     },
@@ -115,9 +113,10 @@ return {
       opts.spec = vim.list_extend(opts.spec or {}, {
         { '<leader>b', group = '[B]uffer' },
         { '<leader>w', group = '[W]indow' },
-        { '<leader>d', group = '[D]ebug' },
+        -- { '<leader>d', group = '[D]iagnostic' },
       })
       return opts
     end,
   },
 }
+
