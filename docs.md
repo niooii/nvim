@@ -77,6 +77,15 @@ Cool IDE setup, run nvim in project root.
 - **Formatting**: Ormolu formatter integrated with `<leader>f`
 - **Commands**: `:CabalBuild`, `:CabalRun`, `:CabalTest`, `:CabalRepl` (or Stack equivalents)
 
+## Python Development
+
+- **LSP**: pyright 
+- **Virtual Environment**: Auto-detects uv/pip envs
+- **Jupyter**: `<leader>pj` - Start Jupyter Lab
+- **Environment**: `<leader>pv` - Select virtual env
+- **Debug**: `<leader>pm` - Debug test method, `<leader>pc` - Debug test class
+- **Docstrings**: `<leader>pd` - Generate docstring
+
 ## Workspace Auto-saved Sessions
 
 - **Auto-save/restore**: Complete workspace state (tabs, splits, terminals) saved per directory

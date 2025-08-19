@@ -5,18 +5,15 @@ return {
   {
     'neovim/nvim-lspconfig',
     opts = function(_, opts)
-      -- Add pyright to the servers configuration
       opts.servers = opts.servers or {}
       opts.servers.pyright = {
         settings = {
           python = {
             analysis = {
-              -- Enable all analysis features like Pylance
               autoSearchPaths = true,
               diagnosticMode = "workspace",
               useLibraryCodeForTypes = true,
               typeCheckingMode = "basic", -- can be "basic", "strict", or "off"
-              -- Pylance-like features
               autoImportCompletions = true,
               completeFunctionParens = true,
               indexing = true,
@@ -71,7 +68,6 @@ return {
 
       dap_python.setup(get_python_path())
 
-      -- Python-specific keybindings
       vim.keymap.set('n', '<leader>pm', function()
         dap_python.test_method()
       end, { desc = '[P]ython Debug Test [M]ethod' })
@@ -86,7 +82,6 @@ return {
     end,
   },
 
-  -- Testing support with neotest
   {
     'nvim-neotest/neotest',
     dependencies = {
@@ -115,7 +110,7 @@ return {
           },
         },
         discovery = {
-          enabled = false, -- Disable auto-discovery for performance
+          enabled = false, -- Disabl discovery for performance
         },
       }
 
@@ -149,7 +144,7 @@ return {
     ft = 'python',
     config = function()
       require('venv-selector').setup {
-        dap_enabled = true, -- Enable DAP integration
+        dap_enabled = true, 
         -- Look for uv venvs first
         name = {
           'venv',
@@ -160,16 +155,17 @@ return {
       }
 
       vim.keymap.set('n', '<leader>pv', '<cmd>VenvSelect<CR>', { desc = '[P]ython Select [V]env' })
+      vim.keymap.set('n', '<leader>pj', function()
+        vim.cmd('terminal jupyter lab')
+      end, { desc = '[P]ython Start [J]upyter Lab' })
     end,
   },
 
-  -- Enhanced Python syntax and indentation
   {
     'Vimjas/vim-python-pep8-indent',
     ft = 'python',
   },
 
-  -- Python docstring generation
   {
     'danymat/neogen',
     ft = 'python',
@@ -191,7 +187,6 @@ return {
     end,
   },
 
-  -- Auto-setup Python file handling
   {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
