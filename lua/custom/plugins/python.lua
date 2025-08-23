@@ -156,7 +156,13 @@ return {
 
       vim.keymap.set('n', '<leader>pv', '<cmd>VenvSelect<CR>', { desc = '[P]ython Select [V]env' })
       vim.keymap.set('n', '<leader>pj', function()
-        vim.cmd('terminal jupyter lab')
+        local cwd = vim.fn.getcwd()
+        local uv_venv_activate = cwd .. '/.venv/bin/activate'
+        if vim.fn.filereadable(uv_venv_activate) == 1 then
+          vim.cmd('terminal source ' .. uv_venv_activate .. ' && jupyter lab')
+        else
+          vim.cmd('terminal jupyter lab')
+        end
       end, { desc = '[P]ython Start [J]upyter Lab' })
     end,
   },
