@@ -4,43 +4,34 @@ return {
   -- Enhanced Python LSP with virtual environment detection
   {
     'neovim/nvim-lspconfig',
-    opts = function(_, opts)
-      opts.servers = opts.servers or {}
-      opts.servers.pyright = {
+    ft = 'python',
+    config = function()
+      local lspconfig = require('lspconfig')
+      
+      lspconfig.pyright.setup({
         settings = {
           python = {
             analysis = {
               autoSearchPaths = true,
               diagnosticMode = "workspace",
               useLibraryCodeForTypes = true,
-              typeCheckingMode = "basic", -- can be "basic", "strict", or "off"
+              typeCheckingMode = "basic",
               autoImportCompletions = true,
               completeFunctionParens = true,
               indexing = true,
             },
-            -- Auto-detect virtual environment from uv/pip
             venvPath = vim.fn.getcwd(),
-            pythonPath = function()
-              -- Check for uv .venv first, then fallback to system python
-              local cwd = vim.fn.getcwd()
-              local uv_venv = cwd .. '/.venv/bin/python'
-              if vim.fn.executable(uv_venv) == 1 then
-                return uv_venv
-              end
-              -- Fallback to system python
-              return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
-            end,
           }
         },
         before_init = function(_, config)
-          -- Dynamically set python path before LSP starts
           local cwd = vim.fn.getcwd()
           local uv_venv = cwd .. '/.venv/bin/python'
           if vim.fn.executable(uv_venv) == 1 then
             config.settings.python.pythonPath = uv_venv
           end
         end,
-      }
+        capabilities = require('blink.cmp').get_lsp_capabilities(),
+      })
     end,
   },
 

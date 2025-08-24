@@ -681,28 +681,6 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         -- gopls = {},
-        pyright = {
-          settings = {
-            python = {
-              analysis = {
-                autoSearchPaths = true,
-                diagnosticMode = 'workspace',
-                useLibraryCodeForTypes = true,
-                typeCheckingMode = 'basic',
-                autoImportCompletions = true,
-                completeFunctionParens = true,
-                indexing = true,
-              },
-            },
-          },
-          before_init = function(_, config)
-            local cwd = vim.fn.getcwd()
-            local uv_venv = cwd .. '/.venv/bin/python'
-            if vim.fn.executable(uv_venv) == 1 then
-              config.settings.python.pythonPath = uv_venv
-            end
-          end,
-        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
