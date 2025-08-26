@@ -1,14 +1,12 @@
--- Python development environment with Pylance-like functionality using pyright
--- Optimized for uv virtual environment management
+-- Python development environment
+-- Debugging, testing, and utilities for Python development
 return {
-  -- Enhanced Python LSP with virtual environment detection
+  -- Python LSP
   {
     'neovim/nvim-lspconfig',
-    ft = 'python',
-    config = function()
-      local lspconfig = require('lspconfig')
-      
-      lspconfig.pyright.setup({
+    opts = function(_, opts)
+      opts.servers = opts.servers or {}
+      opts.servers.pyright = {
         settings = {
           python = {
             analysis = {
@@ -20,18 +18,9 @@ return {
               completeFunctionParens = true,
               indexing = true,
             },
-            venvPath = vim.fn.getcwd(),
           }
         },
-        before_init = function(_, config)
-          local cwd = vim.fn.getcwd()
-          local uv_venv = cwd .. '/.venv/bin/python'
-          if vim.fn.executable(uv_venv) == 1 then
-            config.settings.python.pythonPath = uv_venv
-          end
-        end,
-        capabilities = require('blink.cmp').get_lsp_capabilities(),
-      })
+      }
     end,
   },
 
