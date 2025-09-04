@@ -11,14 +11,14 @@ return {
           python = {
             analysis = {
               autoSearchPaths = true,
-              diagnosticMode = "workspace",
+              diagnosticMode = 'workspace',
               useLibraryCodeForTypes = true,
-              typeCheckingMode = "basic",
+              typeCheckingMode = 'basic',
               autoImportCompletions = true,
               completeFunctionParens = true,
               indexing = true,
             },
-          }
+          },
         },
       }
     end,
@@ -43,7 +43,7 @@ return {
         if vim.fn.executable(uv_venv) == 1 then
           return uv_venv
         end
-        return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+        return vim.fn.exepath 'python3' or vim.fn.exepath 'python' or 'python'
       end
 
       dap_python.setup(get_python_path())
@@ -84,7 +84,7 @@ return {
               if vim.fn.executable(uv_venv) == 1 then
                 return uv_venv
               end
-              return vim.fn.exepath('python3') or vim.fn.exepath('python') or 'python'
+              return vim.fn.exepath 'python3' or vim.fn.exepath 'python' or 'python'
             end,
             pytest_discover_instances = true,
           },
@@ -124,7 +124,7 @@ return {
     ft = 'python',
     config = function()
       require('venv-selector').setup {
-        dap_enabled = true, 
+        dap_enabled = true,
         -- Look for uv venvs first
         name = {
           'venv',
@@ -137,11 +137,11 @@ return {
       vim.keymap.set('n', '<leader>pv', '<cmd>VenvSelect<CR>', { desc = '[P]ython Select [V]env' })
       vim.keymap.set('n', '<leader>pj', function()
         local cwd = vim.fn.getcwd()
-        local uv_venv_activate = cwd .. '/.venv/bin/activate'
-        if vim.fn.filereadable(uv_venv_activate) == 1 then
-          vim.cmd('terminal source ' .. uv_venv_activate .. ' && jupyter lab')
+        local uv_file = cwd .. 'pyproject.toml'
+        if vim.fn.filereadable(uv_file) == 1 then
+          vim.cmd 'terminal uv run python -m jupyterlab'
         else
-          vim.cmd('terminal jupyter lab')
+          vim.cmd 'terminal jupyter lab'
         end
       end, { desc = '[P]ython Start [J]upyter Lab' })
     end,
