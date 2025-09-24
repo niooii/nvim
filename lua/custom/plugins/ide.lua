@@ -105,6 +105,78 @@ return {
     },
   },
 
+  -- Multi-file search and replace
+  {
+    'nvim-pack/nvim-spectre',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('spectre').setup {
+        color_devicons = true,
+        highlight = {
+          ui = 'String',
+          search = 'DiffChange',
+          replace = 'DiffDelete',
+        },
+        mapping = {
+          ['toggle_line'] = {
+            map = 'dd',
+            cmd = "<cmd>lua require('spectre').toggle_line()<CR>",
+            desc = 'toggle current item',
+          },
+          ['enter_file'] = {
+            map = '<cr>',
+            cmd = "<cmd>lua require('spectre.actions').select_entry()<CR>",
+            desc = 'goto current file',
+          },
+          ['send_to_qf'] = {
+            map = '<leader>q',
+            cmd = "<cmd>lua require('spectre.actions').send_to_qf()<CR>",
+            desc = 'send all item to quickfix',
+          },
+          ['replace_cmd'] = {
+            map = '<leader>c',
+            cmd = "<cmd>lua require('spectre.actions').replace_cmd()<CR>",
+            desc = 'input replace vim command',
+          },
+          ['show_option_menu'] = {
+            map = '<leader>o',
+            cmd = "<cmd>lua require('spectre').show_options()<CR>",
+            desc = 'show option',
+          },
+          ['run_current_replace'] = {
+            map = '<leader>rc',
+            cmd = "<cmd>lua require('spectre.actions').run_current_replace()<CR>",
+            desc = 'replace current line',
+          },
+          ['run_replace'] = {
+            map = '<leader>R',
+            cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
+            desc = 'replace all',
+          },
+          ['change_view_mode'] = {
+            map = '<leader>v',
+            cmd = "<cmd>lua require('spectre').change_view()<CR>",
+            desc = 'change result view mode',
+          },
+        },
+      }
+
+      -- Keymaps for multi-file search and replace
+      vim.keymap.set('n', '<leader>sR', '<cmd>lua require("spectre").toggle()<CR>', {
+        desc = '[S]earch and [R]eplace in files',
+      })
+      vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
+        desc = '[S]earch and replace current word in [P]roject',
+      })
+      vim.keymap.set('v', '<leader>sp', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
+        desc = '[S]earch and replace selection in [P]roject',
+      })
+      vim.keymap.set('n', '<leader>sc', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
+        desc = '[S]earch and replace in [C]urrent file',
+      })
+    end,
+  },
+
   -- Additional IDE quality-of-life improvements
   {
     'folke/which-key.nvim',
@@ -113,7 +185,7 @@ return {
       opts.spec = vim.list_extend(opts.spec or {}, {
         { '<leader>b', group = '[B]uffer' },
         { '<leader>w', group = '[W]indow' },
-        -- { '<leader>d', group = '[D]iagnostic' },
+        { '<leader>s', group = '[S]earch' },
       })
       return opts
     end,

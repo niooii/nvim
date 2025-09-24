@@ -173,6 +173,39 @@ return {
     end,
   },
 
+  -- Jupyter notebook integration with Molten
+  {
+    'benlubas/molten-nvim',
+    version = '^1.0.0',
+    dependencies = { '3rd/image.nvim' },
+    build = ':UpdateRemotePlugins',
+    ft = 'python',
+    init = function()
+      vim.g.molten_image_provider = 'image.nvim'
+      vim.g.molten_output_win_max_height = 20
+    end,
+    config = function()
+      vim.keymap.set('v', '<leader>pe', ':<C-u>MoltenEvaluateVisual<CR>gv', { desc = '[P]ython [E]valuate Selection' })
+      vim.keymap.set('n', '<leader>pi', '<cmd>MoltenInit<CR>', { desc = '[P]ython Molten [I]nit' })
+      vim.keymap.set('n', '<leader>pr', '<cmd>MoltenEvaluateLine<CR>', { desc = '[P]ython Molten [R]un Line' })
+      vim.keymap.set('n', '<leader>po', '<cmd>MoltenShowOutput<CR>', { desc = '[P]ython Molten Show [O]utput' })
+    end,
+  },
+
+  {
+    '3rd/image.nvim',
+    ft = 'python',
+    opts = {
+      backend = 'kitty',
+      max_width = 100,
+      max_height = 12,
+      max_height_window_percentage = math.huge,
+      max_width_window_percentage = math.huge,
+      window_overlap_clear_enabled = true,
+      window_overlap_clear_ft_ignore = { 'cmp_menu', 'cmp_docs', '' },
+    },
+  },
+
   {
     'nvim-treesitter/nvim-treesitter',
     opts = function(_, opts)
