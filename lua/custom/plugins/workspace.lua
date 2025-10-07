@@ -44,7 +44,7 @@ return {
       vim.keymap.set('n', '<leader>ws', '<cmd>SessionSave<CR>', { desc = '[W]orkspace [S]ave' })
       vim.keymap.set('n', '<leader>wr', '<cmd>SessionRestore<CR>', { desc = '[W]orkspace [R]estore' })
       vim.keymap.set('n', '<leader>wd', '<cmd>SessionDelete<CR>', { desc = '[W]orkspace [D]elete' })
-      vim.keymap.set('n', '<leader>wl', '<cmd>Autosession search<CR>', { desc = '[W]orkspace [L]ist' })
+      vim.keymap.set('n', '<leader>wl', '<cmd>AutoSession search<CR>', { desc = '[W]orkspace [L]ist' })
     end,
   },
 }

@@ -360,7 +360,7 @@ require('lazy').setup({
       spec = {
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
       },
     },
   },
@@ -741,6 +741,11 @@ require('lazy').setup({
         'debugpy', -- Python debugger
         'luau-lsp', -- Luau language server (managed by lopi-py/luau-lsp.nvim, not lspconfig)
         'selene', -- Lua/Luau linter
+        'ts_ls', -- TypeScript/JavaScript language server
+        'tailwindcss', -- Tailwind CSS language server
+        'emmet_ls', -- Emmet language server
+        'eslint', -- ESLint language server
+        'prettierd', -- Prettier formatter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

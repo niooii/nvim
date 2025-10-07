@@ -22,6 +22,16 @@ Cool IDE setup, run nvim in project root.
 - `<leader>wc` - Close current window
 - `<leader>wo` - Close all other windows (only keep current)
 
+### Buffer Movement Between Windows
+- `<leader>wm` - Interactive buffer movement (choose direction)
+- `Alt+Shift+h` - Move buffer to left window
+- `Alt+Shift+l` - Move buffer to right window
+- `Alt+Shift+j` - Move buffer to window below
+- `Alt+Shift+k` - Move buffer to window above
+- `Alt+Shift+p` - Move buffer to previous window
+
+**Note**: These commands swap buffers between windows without changing the window layout, unlike standard window movement commands.
+
 ## Buffer/Tab Management
 
 ### Quick Navigation  

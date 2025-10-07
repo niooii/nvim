@@ -56,6 +56,135 @@ return {
       -- Quick close window
       vim.keymap.set('n', '<leader>wc', '<cmd>close<CR>', { desc = '[W]indow [C]lose' })
       vim.keymap.set('n', '<leader>wo', '<cmd>only<CR>', { desc = '[W]indow [O]nly' })
+
+      -- Buffer movement between windows (without changing window layout)
+      local function move_buffer_to_window(direction)
+        local current_win = vim.api.nvim_get_current_win()
+        local current_buf = vim.api.nvim_get_current_buf()
+        local current_win_config = vim.api.nvim_win_get_config(current_win)
+
+        -- Get window positions for all windows (except floating)
+        local windows = {}
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+          local config = vim.api.nvim_win_get_config(win)
+          if not config.relative or config.relative == '' then -- Skip floating windows
+            table.insert(windows, {
+              id = win,
+              winnr = vim.fn.win_id2win(win),
+              row = vim.fn.win_screenpos(win)[1],
+              col = vim.fn.win_screenpos(win)[2],
+              width = config.width,
+              height = config.height
+            })
+          end
+        end
+
+        -- Find current window in the list
+        local current_info = nil
+        for _, win_info in ipairs(windows) do
+          if win_info.id == current_win then
+            current_info = win_info
+            break
+          end
+        end
+
+        if not current_info then
+          vim.notify('Current window not found', vim.log.levels.ERROR)
+          return
+        end
+
+        -- Find target window based on visual position
+        local target_win = nil
+        local best_score = -1
+
+        local current_center_y = current_info.row + current_info.height / 2
+        local current_center_x = current_info.col + current_info.width / 2
+
+        for _, win_info in ipairs(windows) do
+          if win_info.id ~= current_win then
+            local target_center_y = win_info.row + win_info.height / 2
+            local target_center_x = win_info.col + win_info.width / 2
+            local score = 0
+
+            if direction == 'left' then
+              -- Target must be to the left and have overlapping vertical range
+              if target_center_x < current_center_x then
+                local vertical_overlap = math.min(current_center_y, target_center_y + win_info.height/2) -
+                                       math.max(current_center_y - current_info.height/2, target_center_y - win_info.height/2)
+                local horizontal_distance = current_center_x - target_center_x
+                score = vertical_overlap / horizontal_distance
+              end
+            elseif direction == 'right' then
+              -- Target must be to the right and have overlapping vertical range
+              if target_center_x > current_center_x then
+                local vertical_overlap = math.min(current_center_y, target_center_y + win_info.height/2) -
+                                       math.max(current_center_y - current_info.height/2, target_center_y - win_info.height/2)
+                local horizontal_distance = target_center_x - current_center_x
+                score = vertical_overlap / horizontal_distance
+              end
+            elseif direction == 'up' then
+              -- Target must be above and have overlapping horizontal range
+              if target_center_y < current_center_y then
+                local horizontal_overlap = math.min(current_center_x, target_center_x + win_info.width/2) -
+                                        math.max(current_center_x - current_info.width/2, target_center_x - win_info.width/2)
+                local vertical_distance = current_center_y - target_center_y
+                score = horizontal_overlap / vertical_distance
+              end
+            elseif direction == 'down' then
+              -- Target must be below and have overlapping horizontal range
+              if target_center_y > current_center_y then
+                local horizontal_overlap = math.min(current_center_x, target_center_x + win_info.width/2) -
+                                        math.max(current_center_x - current_info.width/2, target_center_x - win_info.width/2)
+                local vertical_distance = target_center_y - current_center_y
+                score = horizontal_overlap / vertical_distance
+              end
+            elseif direction == 'prev' then
+              target_win = vim.fn.win_getid(vim.fn.winnr('#'))
+              break
+            end
+
+            -- Keep the window with the best score
+            if score > best_score then
+              best_score = score
+              target_win = win_info.id
+            end
+          end
+        end
+
+        -- Only proceed if we found a valid target window
+        if target_win and target_win ~= current_win then
+          -- Get the buffer in the target window
+          local target_buf = vim.api.nvim_win_get_buf(target_win)
+
+          -- Swap the buffers between windows
+          vim.api.nvim_win_set_buf(current_win, target_buf)
+          vim.api.nvim_win_set_buf(target_win, current_buf)
+
+          -- Focus moves to the target window with our buffer
+          vim.api.nvim_set_current_win(target_win)
+        else
+          vim.notify('No window in that direction', vim.log.levels.WARN)
+        end
+      end
+
+      -- Keybindings for moving buffers between windows
+      vim.keymap.set('n', '<leader>wm', function()
+        vim.ui.select({'left', 'right', 'up', 'down', 'prev'}, {
+          prompt = 'Move buffer to window:',
+        }, function(choice)
+          if choice then
+            move_buffer_to_window(choice)
+          end
+        end)
+      end, { desc = '[W]indow [M]ove buffer (interactive)' })
+
+    
+      -- Alt+Shift+hjkl for moving buffers between windows (no leader needed)
+      vim.keymap.set('n', '<A-S-h>', function() move_buffer_to_window('left') end, { desc = 'Move buffer to left window', silent = true })
+      vim.keymap.set('n', '<A-S-l>', function() move_buffer_to_window('right') end, { desc = 'Move buffer to right window', silent = true })
+      vim.keymap.set('n', '<A-S-j>', function() move_buffer_to_window('down') end, { desc = 'Move buffer to window below', silent = true })
+      vim.keymap.set('n', '<A-S-k>', function() move_buffer_to_window('up') end, { desc = 'Move buffer to window above', silent = true })
+      vim.keymap.set('n', '<A-S-p>', function() move_buffer_to_window('prev') end, { desc = 'Move buffer to previous window', silent = true })
     end,
   },
 

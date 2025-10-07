@@ -1,4 +1,34 @@
 -- A collection of plugins to create a CLion-like C++ development environment
+
+-- Ensure the C/C++ header template keymap is always available in c/cpp buffers.
+-- Register on FileType and also handle the current buffer immediately.
+do
+  local function insert_header_template()
+    local date = os.date('%-m/%-d/%Y')
+    local header = {
+      '//',
+      '// Created by niooi on ' .. date .. '.',
+      '//',
+      '',
+      '#pragma once',
+      '',
+    }
+    local row = vim.api.nvim_win_get_cursor(0)[1]
+    vim.api.nvim_buf_set_lines(0, row - 1, row - 1, false, header)
+    vim.api.nvim_win_set_cursor(0, { row + #header - 1, 0 })
+  end
+
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'c', 'cpp' },
+    callback = function(args)
+      vim.keymap.set('n', '<leader>h', insert_header_template, {
+        buffer = args.buf,
+        desc = 'Insert [H]eader template',
+        silent = true,
+      })
+    end,
+  })
+end
 return {
   -- Standard C++ indentation
   {
@@ -14,6 +44,34 @@ return {
           vim.opt_local.cinoptions = ':0,l1,t0,g0,(0'
         end,
       })
+
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.name == 'clangd' then
+            vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+          end
+        end,
+      })
+    end,
+  },
+
+  {
+    'neovim/nvim-lspconfig',
+    config = function()
+      vim.lsp.config('clangd', {
+        cmd = {
+          'clangd',
+          '--background-index',
+          '--clang-tidy',
+          '--header-insertion=iwyu',
+          '--completion-style=detailed',
+          '--function-arg-placeholders',
+          '--fallback-style=llvm',
+          '--inlay-hints',
+        },
+      })
+      vim.lsp.enable('clangd')
     end,
   },
   -- LSP-based syntax highlighting (not treesitter its bugged???)
@@ -22,6 +80,8 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = { 'neovim/nvim-lspconfig' },
   },
+
+  -- Which-key: rely on mapping desc; avoid reserving <leader>h as a prefix
 
   {
     'mfussenegger/nvim-dap',
