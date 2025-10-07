@@ -5,14 +5,21 @@
 do
   local function insert_header_template()
     local date = os.date('%-m/%-d/%Y')
+    local filename = vim.api.nvim_buf_get_name(0)
+    local is_header = filename:match('%.h[pp]?$') ~= nil
+
     local header = {
       '//',
       '// Created by niooi on ' .. date .. '.',
       '//',
       '',
-      '#pragma once',
-      '',
     }
+
+    if is_header then
+      table.insert(header, '#pragma once')
+      table.insert(header, '')
+    end
+
     local row = vim.api.nvim_win_get_cursor(0)[1]
     vim.api.nvim_buf_set_lines(0, row - 1, row - 1, false, header)
     vim.api.nvim_win_set_cursor(0, { row + #header - 1, 0 })
