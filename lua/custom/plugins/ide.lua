@@ -185,6 +185,44 @@ return {
       vim.keymap.set('n', '<A-S-j>', function() move_buffer_to_window('down') end, { desc = 'Move buffer to window below', silent = true })
       vim.keymap.set('n', '<A-S-k>', function() move_buffer_to_window('up') end, { desc = 'Move buffer to window above', silent = true })
       vim.keymap.set('n', '<A-S-p>', function() move_buffer_to_window('prev') end, { desc = 'Move buffer to previous window', silent = true })
+
+      -- Window highlighting for current window
+      vim.api.nvim_create_autocmd('WinEnter', {
+        callback = function()
+          vim.wo.winhighlight = 'Normal:Normal,NormalNC:NormalNC'
+        end,
+        desc = 'Highlight current window'
+      })
+
+      vim.api.nvim_create_autocmd('WinLeave', {
+        callback = function()
+          vim.wo.winhighlight = 'Normal:NormalNC,NormalNC:NormalNC'
+        end,
+        desc = 'Dim inactive windows'
+      })
+
+      -- Define the highlight groups with moderate dimming
+      local normal_bg = vim.api.nvim_get_hl(0, { name = 'Normal' }).bg or '#000000'
+      local normal_fg = vim.api.nvim_get_hl(0, { name = 'Normal' }).fg or '#ffffff'
+      vim.api.nvim_set_hl(0, 'NormalNC', {
+        bg = normal_bg,
+        -- Dim the foreground for inactive windows (less drastic than before)
+        fg = normal_fg - 0x202020,
+        bold = false,
+        italic = false,
+      })
+
+      -- Also set window separator highlights to make borders more visible
+      vim.api.nvim_set_hl(0, 'WinSeparator', {
+        fg = '#444444',
+        bg = 'NONE',
+      })
+
+      -- Highlight for vertical and horizontal window separators
+      vim.api.nvim_set_hl(0, 'VertSplit', {
+        fg = '#444444',
+        bg = 'NONE',
+      })
     end,
   },
 

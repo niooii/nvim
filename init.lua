@@ -110,12 +110,14 @@ vim.o.mouse = 'a'
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
 
--- for windwos only
-vim.opt.shell = "powershell"
-vim.opt.shellcmdflag =
-  "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command"
-vim.opt.shellquote = '"'
-vim.opt.shellxquote = ""
+-- for windows only
+if vim.fn.has('win32') == 1 then
+  vim.opt.shell = "powershell"
+  vim.opt.shellcmdflag =
+    "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command"
+  vim.opt.shellquote = '"'
+  vim.opt.shellxquote = ""
+end
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
