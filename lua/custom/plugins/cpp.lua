@@ -52,7 +52,10 @@ return {
         end,
       })
 
+      -- Enable inlay hints for clangd via the global LspAttach in init.lua
+      -- (this autocmd is automatically merged with the one in init.lua)
       vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('cpp-lsp-attach', { clear = true }),
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if client and client.name == 'clangd' then
@@ -60,25 +63,6 @@ return {
           end
         end,
       })
-    end,
-  },
-
-  {
-    'neovim/nvim-lspconfig',
-    config = function()
-      vim.lsp.config('clangd', {
-        cmd = {
-          'clangd',
-          '--background-index',
-          '--clang-tidy',
-          '--header-insertion=iwyu',
-          '--completion-style=detailed',
-          '--function-arg-placeholders',
-          '--fallback-style=llvm',
-          '--inlay-hints',
-        },
-      })
-      vim.lsp.enable('clangd')
     end,
   },
   -- LSP-based syntax highlighting (not treesitter its bugged???)

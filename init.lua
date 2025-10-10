@@ -215,6 +215,22 @@ vim.keymap.set('n', '<A-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<A-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<A-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Fallback global LSP navigation mappings
+-- Keep `grd` available even if LspAttach didn't run yet; buffer-local maps will override this.
+vim.keymap.set('n', 'grd', function()
+  local ok, tb = pcall(require, 'telescope.builtin')
+  if ok and tb and tb.lsp_definitions then
+    tb.lsp_definitions()
+  else
+    -- Fallback to native LSP definition if Telescope is unavailable
+    if vim.lsp.buf.definition then
+      vim.lsp.buf.definition()
+    else
+      vim.notify('LSP: definition not available', vim.log.levels.WARN)
+    end
+  end
+end, { desc = 'LSP: [G]oto [D]efinition' })
+
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -689,7 +705,17 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {},
+        clangd = {
+          cmd = {
+            'clangd',
+            '--background-index',
+            '--clang-tidy',
+            '--header-insertion=iwyu',
+            '--completion-style=detailed',
+            '--function-arg-placeholders',
+            '--fallback-style=llvm',
+          },
+        },
         -- gopls = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
